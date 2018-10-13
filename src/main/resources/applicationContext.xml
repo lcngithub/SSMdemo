@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
+       http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-3.1.xsd
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context.xsd
     http://www.springframework.org/schema/beans
@@ -12,9 +15,12 @@
     http://www.springframework.org/schema/aop
     http://www.springframework.org/schema/aop/spring-aop.xsd">
 
+    <!-- spring 任务调度 task任务扫描注解 -->
+    <context:component-scan base-package="com.louis.controller"></context:component-scan>
+    <task:annotation-driven/>
     <!-- 自动扫描SpringMVC包 ,将带有注解的类 纳入spring容器管理 -->
     <context:component-scan base-package="com.louis" use-default-filters="true">
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
     <!-- 引入jdbc配置文件 -->
@@ -27,7 +33,7 @@
     </bean>
     <!-- 对dataSource 数据源进行事务管理 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
     </bean>
     <!-- dataSource 配置 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
@@ -38,8 +44,8 @@
         <property name="password" value="${jdbc.password}"/>
         <!-- 密码加密 -->
         <!-- 配置监控统计拦截的filters -->
-        <property name="filters" value="config" />
-        <property name="connectionProperties" value="config.decrypt=true" />
+        <property name="filters" value="config"/>
+        <property name="connectionProperties" value="config.decrypt=true"/>
         <!-- 配置初始化大小、最小、最大 -->
         <property name="initialSize" value="${ds.initialSize}"/>
         <property name="minIdle" value="${ds.minIdle}"/>
@@ -67,24 +73,24 @@
     <!-- mybatis文件配置，扫描所有mapper.xml文件 -->
     <!-- 配置mybatisSqlSessionFactoryBean -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:mybatis.xml"/>
         <property name="mapperLocations" value="classpath*:com/louis/dao/xml/*Mapper.xml"/>
     </bean>
 
     <!-- 配置SqlSessionTemplate -->
     <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
     </bean>
     <!-- 配置mybatis mapper接口，扫描所有dao -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.louis.dao"/>
         <property name="sqlSessionTemplateBeanName" value="sqlSessionTemplate"/>
     </bean>
-    <bean id="viewResolver"	class="org.springframework.web.servlet.view.UrlBasedViewResolver">
-        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
-        <property name="prefix" value="/WEB-INF/views/" />
-        <property name="suffix" value=".jsp" />
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/views/"/>
+        <property name="suffix" value=".jsp"/>
     </bean>
 
     <!-- 事务管理 通知 -->
