@@ -16,8 +16,10 @@
     http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- spring 任务调度 task任务扫描注解 -->
-    <context:component-scan base-package="com.louis.controller"></context:component-scan>
-    <task:annotation-driven/>
+    <context:component-scan base-package="com.louis.controller"/>
+    <task:annotation-driven scheduler="myScheduler"/>
+    <task:scheduler id="myScheduler" pool-size="5"/>
+    
     <!-- 自动扫描SpringMVC包 ,将带有注解的类 纳入spring容器管理 -->
     <context:component-scan base-package="com.louis" use-default-filters="true">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
