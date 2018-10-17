@@ -16,38 +16,38 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl implements UserService {
-  private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-  @Autowired
-  private AccountMapper accountMapper;
+    @Autowired
+    private AccountMapper accountMapper;
 
-  @Override
-  public List<Account> getUsers(Integer id) {
-    AccountExample example = new AccountExample();
-    AccountExample.Criteria criteria = example.createCriteria();
-    if (id != null) {
-      criteria.andIdEqualTo(id);
-    } else {
-      criteria.andIdIsNotNull();
+    @Override
+    public List<Account> getUsers(Integer id) {
+        AccountExample example = new AccountExample();
+        AccountExample.Criteria criteria = example.createCriteria();
+        if (id != null) {
+            criteria.andIdEqualTo(id);
+        } else {
+            criteria.andIdIsNotNull();
+        }
+        return accountMapper.selectByExample(example);
     }
-    return accountMapper.selectByExample(example);
-  }
 
-  @Override
-  public Integer addUser(String name, String password) {
-    Account account = new Account();
-    account.setName(name);
-    account.setPassword(password);
-    return accountMapper.insertSelective(account);
-  }
-
-  @Override
-  public Integer deleteUserBypw(String password) {
-    AccountExample example = new AccountExample();
-    AccountExample.Criteria criteria = example.createCriteria();
-    if (password != null) {
-      criteria.andPasswordEqualTo(password);
+    @Override
+    public Integer addUser(String name, String password) {
+        Account account = new Account();
+        account.setName(name);
+        account.setPassword(password);
+        return accountMapper.insertSelective(account);
     }
-    return accountMapper.deleteByExample(example);
-  }
+
+    @Override
+    public Integer deleteUserBypw(String password) {
+        AccountExample example = new AccountExample();
+        AccountExample.Criteria criteria = example.createCriteria();
+        if (password != null) {
+            criteria.andPasswordEqualTo(password);
+        }
+        return accountMapper.deleteByExample(example);
+    }
 }
